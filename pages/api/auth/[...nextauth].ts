@@ -11,11 +11,6 @@ export default NextAuth({
           type: "text",
           placeholder: "example@email.com",
         },
-        username: {
-          label: "Username",
-          type: "text",
-          placeholder: "Username",
-        },
         password: {
           label: "Password",
           type: "password",
@@ -23,12 +18,14 @@ export default NextAuth({
         },
       },
       async authorize(credentials, req) {
+        console.log(credentials);
         const res = await fetch("http://localhost:8080/login", {
           method: "POST",
           body: JSON.stringify(credentials),
           headers: { "Content-Type": "application/json" },
         });
         const user = await res.json();
+        console.log(user);
         if (res.ok && user) {
           return user;
         }
@@ -38,6 +35,10 @@ export default NextAuth({
   ],
   session: {
     strategy: "jwt",
+  },
+  pages: {
+    signIn: "/auth/login",
+    error: "/auth/error",
   },
   secret: process.env.SECRET,
 });
